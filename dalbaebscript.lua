@@ -29,7 +29,7 @@ local function checkExecutor()
             for i,v in pairs(core_blacklist) do
                 if string.find(string.lower(tostring(res)), v) then
                     pcall(function()
-                        getgenv().queue_on_teleport = function() warn('queue_on_teleport disabled!') end
+                        getgenv().queue_on_teleport = function() warn('queue_on_teleport отключен!') end
                     end)
                 end
             end
@@ -69,8 +69,8 @@ shared.CheatEngineMode = shared.CheatEngineMode or CheatEngineMode
 if game.PlaceId == 79546208627805 then
     pcall(function()
         game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "DALBAEB | 99 Nights In The Forest", -- ИЗМЕНЕНО: Voidware -> DALBAEB
-            Text = "Go In Game for DALBAEB to load :D [You are in lobby currently]", -- ИЗМЕНЕНО: Voidware -> DALBAEB
+            Title = "DALBAEB | 99 Ночей в Лесу", -- ПЕРЕВЕДЕНО
+            Text = "Зайдите в игру для загрузки DALBAEB :D [Вы сейчас в лобби]", -- ПЕРЕВЕДЕНО
             Duration = 10
         })
     end)
@@ -86,7 +86,7 @@ task.spawn(function()
                     self[key] = service
                     return service
                 else
-                    warn(`[Services] Warning: "{key}" is not a valid Roblox service.`)
+                    warn(`[Сервисы] Предупреждение: "{key}" не является валидным сервисом Roblox.`) -- ПЕРЕВЕДЕНО
                     return nil
                 end
             end
@@ -190,4 +190,4 @@ pcall(function()
     NotifyService.SetCore = hookedSetCore
 end)
 
-warn("[DALBAEB] Injector: Branding successfully modified! All systems operational.")
+warn("[DALBAEB] Инжектор: Брендинг успешно изменен! Все системы работают.") -- ПЕРЕВЕДЕНО
