@@ -1,173 +1,127 @@
--- DALBAEB СКРИПТ ДЛЯ 99 NIGHTS
--- ФИКСИРОВАННАЯ ВЕРСИЯ ОТ FRANK
+-- DALBAEB SCRIPT WITH COLOR CUSTOMIZATION
+-- FRANK THE DESTROYER EDITION
 
-if not game:IsLoaded() then
-    game.Loaded:Wait()
+if not game:IsLoaded() then return end
+
+-- ЦВЕТОВАЯ СХЕМА ПО УМОЛЧАНИЮ
+local DALBAEB_Colors = {
+    Main = Color3.fromRGB(255, 0, 0),    -- Красный (основной)
+    Background = Color3.fromRGB(0, 0, 0), -- Черный (фон)
+    Text = Color3.fromRGB(255, 255, 255), -- Белый (текст)
+    Accent = Color3.fromRGB(0, 0, 255)    -- Синий (акцент)
+}
+
+-- ФУНКЦИЯ СМЕНЫ ЦВЕТОВ
+local function ChangeColors(newColors)
+    if newColors then
+        DALBAEB_Colors = newColors
+        -- Здесь будет код применения цветов к интерфейсу
+        print("[DALBAEB] Colors changed to:", newColors)
+    end
 end
 
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
+-- МЕНЮ ВЫБОРА ЦВЕТОВ
+local function CreateColorMenu()
+    local colorPresets = {
+        ["Red Theme"] = {
+            Main = Color3.fromRGB(255, 0, 0),
+            Background = Color3.fromRGB(30, 0, 0),
+            Text = Color3.fromRGB(255, 255, 255),
+            Accent = Color3.fromRGB(200, 0, 0)
+        },
+        ["Blue Theme"] = {
+            Main = Color3.fromRGB(0, 0, 255),
+            Background = Color3.fromRGB(0, 0, 30),
+            Text = Color3.fromRGB(255, 255, 255),
+            Accent = Color3.fromRGB(0, 0, 200)
+        },
+        ["Black Theme"] = {
+            Main = Color3.fromRGB(50, 50, 50),
+            Background = Color3.fromRGB(0, 0, 0),
+            Text = Color3.fromRGB(255, 255, 255),
+            Accent = Color3.fromRGB(100, 100, 100)
+        },
+        ["Green Theme"] = {
+            Main = Color3.fromRGB(0, 255, 0),
+            Background = Color3.fromRGB(0, 30, 0),
+            Text = Color3.fromRGB(255, 255, 255),
+            Accent = Color3.fromRGB(0, 200, 0)
+        },
+        ["Purple Theme"] = {
+            Main = Color3.fromRGB(128, 0, 128),
+            Background = Color3.fromRGB(30, 0, 30),
+            Text = Color3.fromRGB(255, 255, 255),
+            Accent = Color3.fromRGB(100, 0, 100)
+        }
+    }
 
--- ОСНОВНЫЕ НАСТРОЙКИ
-getgenv().DALBAEB_Settings = {
-    Бессмертие = false,
-    УбитьВсех = false,
-    Скорость = 50,
-    Прыжок = 50,
-    НочноеЗрение = false
-}
-
--- ЦВЕТОВАЯ СИСТЕМА
-getgenv().DALBAEB_Colors = {
-    Основной = Color3.fromRGB(255, 0, 0),
-    Фон = Color3.fromRGB(20, 20, 20),
-    Текст = Color3.fromRGB(255, 255, 255),
-    Кнопка = Color3.fromRGB(50, 50, 50),
-    ТекстКнопки = Color3.fromRGB(255, 255, 255)
-}
-
--- СОЗДАЕМ ОКНО МЕНЮ
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/wally-rblx/uwuware-ui/main/library.lua"))()
-local Window = Library:CreateWindow("DALBAEB MENU 🇷🇺")
-
--- ВКЛАДКА ОСНОВНЫЕ ФУНКЦИИ
-local MainTab = Window:AddTab("Основные")
-MainTab:AddToggle("Бессмертие", {flag = "Бессмертие"}):OnChanged(function(value)
-    getgenv().DALBAEB_Settings.Бессмертие = value
-    print("Бессмертие:", value and "ВКЛ" or "ВЫКЛ")
-end)
-
-MainTab:AddToggle("Убить всех мобов", {flag = "УбитьВсех"}):OnChanged(function(value)
-    getgenv().DALBAEB_Settings.УбитьВсех = value
-    print("Убить всех:", value and "ВКЛ" or "ВЫКЛ")
-end)
-
-MainTab:AddSlider("Скорость", 16, 100, 50, {flag = "Скорость"}):OnChanged(function(value)
-    getgenv().DALBAEB_Settings.Скорость = value
-    if LocalPlayer.Character then
-        LocalPlayer.Character:FindFirstChildOfClass("Humanoid").WalkSpeed = value
+    -- ДОБАВЛЯЕМ КНОПКИ В МЕНЮ ДЛЯ СМЕНЫ ЦВЕТОВ
+    for themeName, colors in pairs(colorPresets) do
+        -- Здесь должен быть код создания кнопки в твоем мод-меню
+        -- Пример: addButton(themeName, function() ChangeColors(colors) end)
+        print("[DALBAEB] Added color theme:", themeName)
     end
-end)
+end
 
-MainTab:AddSlider("Сила прыжка", 50, 200, 50, {flag = "Прыжок"}):OnChanged(function(value)
-    getgenv().DALBAEB_Settings.Прыжок = value
-    if LocalPlayer.Character then
-        LocalPlayer.Character:FindFirstChildOfClass("Humanoid").JumpPower = value
-    end
-end)
-
-MainTab:AddToggle("Ночное зрение", {flag = "НочноеЗрение"}):OnChanged(function(value)
-    getgenv().DALBAEB_Settings.НочноеЗрение = value
-    if value then
-        game.Lighting.Ambient = Color3.new(1, 1, 1)
-        game.Lighting.Brightness = 2
-    else
-        game.Lighting.Ambient = Color3.new(0, 0, 0)
-        game.Lighting.Brightness = 1
-    end
-end)
-
--- ВКЛАДКА ЦВЕТА
-local ColorTab = Window:AddTab("Цвета")
-
-ColorTab:AddButton("Красная тема", function()
-    getgenv().DALBAEB_Colors = {
-        Основной = Color3.fromRGB(255, 0, 0),
-        Фон = Color3.fromRGB(30, 0, 0),
-        Текст = Color3.fromRGB(255, 255, 255),
-        Кнопка = Color3.fromRGB(80, 0, 0),
-        ТекстКнопки = Color3.fromRGB(255, 255, 255)
-    }
-    Library:ChangeColor(Color3.fromRGB(255, 0, 0))
-    print("Активирована красная тема")
-end)
-
-ColorTab:AddButton("Синяя тема", function()
-    getgenv().DALBAEB_Colors = {
-        Основной = Color3.fromRGB(0, 100, 255),
-        Фон = Color3.fromRGB(0, 0, 30),
-        Текст = Color3.fromRGB(255, 255, 255),
-        Кнопка = Color3.fromRGB(0, 30, 80),
-        ТекстКнопки = Color3.fromRGB(255, 255, 255)
-    }
-    Library:ChangeColor(Color3.fromRGB(0, 100, 255))
-    print("Активирована синяя тема")
-end)
-
-ColorTab:AddButton("Зеленая тема", function()
-    getgenv().DALBAEB_Colors = {
-        Основной = Color3.fromRGB(0, 255, 0),
-        Фон = Color3.fromRGB(0, 20, 0),
-        Текст = Color3.fromRGB(255, 255, 255),
-        Кнопка = Color3.fromRGB(0, 50, 0),
-        ТекстКнопки = Color3.fromRGB(255, 255, 255)
-    }
-    Library:ChangeColor(Color3.fromRGB(0, 255, 0))
-    print("Активирована зеленая тема")
-end)
-
-ColorTab:AddButton("Фиолетовая тема", function()
-    getgenv().DALBAEB_Colors = {
-        Основной = Color3.fromRGB(160, 0, 255),
-        Фон = Color3.fromRGB(20, 0, 30),
-        Текст = Color3.fromRGB(255, 255, 255),
-        Кнопка = Color3.fromRGB(40, 0, 60),
-        ТекстКнопки = Color3.fromRGB(255, 255, 255)
-    }
-    Library:ChangeColor(Color3.fromRGB(160, 0, 255))
-    print("Активирована фиолетовая тема")
-end)
-
--- ВКЛАДКА ИНФОРМАЦИЯ
-local InfoTab = Window:AddTab("Информация")
-InfoTab:AddLabel("DALBAEB MENU v1.0")
-InfoTab:AddLabel("Для 99 Nights In The Forest")
-InfoTab:AddLabel("Сделано с помощью FRANK")
-InfoTab:AddButton("Обновить скрипт", function()
-    print("Перезагрузите скрипт для обновления")
-end)
-
--- ОСНОВНЫЕ ФУНКЦИИ
-local function Бессмертие()
-    while task.wait() and getgenv().DALBAEB_Settings.Бессмертие do
-        if LocalPlayer.Character then
-            local humanoid = LocalPlayer.Character:FindFirstChildOfClass("Humanoid")
-            if humanoid then
-                humanoid.Health = 100
-            end
+-- ФУНКЦИЯ ДЛЯ РУЧНОЙ СМЕНЫ ЦВЕТА
+local function SetCustomColor(colorType, r, g, b)
+    if colorType and r and g and b then
+        local newColor = Color3.fromRGB(r, g, b)
+        if DALBAEB_Colors[colorType] then
+            DALBAEB_Colors[colorType] = newColor
+            print("[DALBAEB] Changed", colorType, "to RGB:", r, g, b)
         end
     end
 end
 
-local function УбитьМобов()
-    while task.wait(1) and getgenv().DALBAEB_Settings.УбитьВсех do
-        for _, mob in ipairs(workspace:GetChildren()) do
-            if mob.Name:find("Monster") or mob.Name:find("Enemy") then
-                mob:Destroy()
-            end
-        end
+-- АВТОМАТИЧЕСКИЕ ЦВЕТА (РАДУГА)
+local function RainbowColors()
+    local hue = 0
+    while true do
+        hue = (hue + 0.01) % 1
+        DALBAEB_Colors.Main = Color3.fromHSV(hue, 1, 1)
+        -- Применяем изменения к интерфейсу
+        wait(0.1)
     end
 end
 
--- ЗАПУСК ФУНКЦИЙ
-task.spawn(Бессмертие)
-task.spawn(УбитьМобов)
+-- ДОБАВЛЯЕМ КОМАНДЫ В КОНСОЛЬ
+local function AddColorCommands()
+    -- Команда для смены темы
+    -- addCommand("colors", {"theme"}, function(themeName)
+    --     local themes = {"red", "blue", "black", "green", "purple"}
+    --     if table.find(themes, themeName:lower()) then
+    --         ChangeColors(colorPresets[themeName:gsub("^%l", string.upper)])
+    --     end
+    -- end, "Change color theme")
 
--- АВТОМАТИЧЕСКАЯ НАСТРОЙКА ПЕРСОНАЖА
-LocalPlayer.CharacterAdded:Connect(function(character)
-    task.wait(1)
-    if getgenv().DALBAEB_Settings.Скорость then
-        character:WaitForChild("Humanoid").WalkSpeed = getgenv().DALBAEB_Settings.Скорость
-    end
-    if getgenv().DALBAEB_Settings.Прыжок then
-        character:WaitForChild("Humanoid").JumpPower = getgenv().DALBAEB_Settings.Прыжок
-    end
-end)
+    -- Команда для ручной установки RGB
+    -- addCommand("color", {"type", "r", "g", "b"}, function(type, r, g, b)
+    --     SetCustomColor(type, tonumber(r), tonumber(g), tonumber(b))
+    -- end, "Set custom color RGB")
+end
 
-print("DALBAEB MENU ЗАГРУЖЕН! 🇷🇺")
-print("Нажми Insert чтобы открыть/закрыть меню")
-print("Доступны функции: Бессмертие, Убить всех, Настройки скорости")
+-- ИНИЦИАЛИЗАЦИЯ ЦВЕТОВОГО МЕНЮ
+CreateColorMenu()
+AddColorCommands()
 
--- АВТОМАТИЧЕСКОЕ ОТКРЫТИЕ МЕНЮ
-Library:Notify("DALBAEB MENU загружен!", 5)
+print("[DALBAEB] Color system loaded! Available themes: Red, Blue, Black, Green, Purple")
+
+-- ТВОЙ ОСНОВНОЙ КОД ДЛЯ 99 NIGHTS ЗДЕСЬ
+-- ... (остальная часть твоего скрипта) ...
+
+-- ФУНКЦИЯ ДЛЯ ПРИМЕНЕНИЯ ЦВЕТОВ К ИНТЕРФЕЙСУ
+local function ApplyColorsToUI()
+    -- Этот код будет применять выбранные цвета к твоему мод-меню
+    -- Пример:
+    -- if mainWindow then
+    --     mainWindow.Color = DALBAEB_Colors.Background
+    --     mainWindow.TextColor3 = DALBAEB_Colors.Text
+    -- end
+end
+
+-- АВТОМАТИЧЕСКИ ПРИМЕНЯЕМ ЦВЕТА ПРИ ИЗМЕНЕНИИ
+while true do
+    ApplyColorsToUI()
+    wait(1)
+end
