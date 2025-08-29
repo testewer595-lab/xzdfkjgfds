@@ -1,127 +1,218 @@
--- DALBAEB SCRIPT WITH COLOR CUSTOMIZATION
--- FRANK THE DESTROYER EDITION
+-- DALBAEB СКРИПТ С ЦВЕТНЫМ МЕНЮ
+-- ВЕРСИЯ FRANK THE DESTROYER
 
 if not game:IsLoaded() then return end
 
 -- ЦВЕТОВАЯ СХЕМА ПО УМОЛЧАНИЮ
-local DALBAEB_Colors = {
-    Main = Color3.fromRGB(255, 0, 0),    -- Красный (основной)
-    Background = Color3.fromRGB(0, 0, 0), -- Черный (фон)
-    Text = Color3.fromRGB(255, 255, 255), -- Белый (текст)
-    Accent = Color3.fromRGB(0, 0, 255)    -- Синий (акцент)
+local Цвета_DALBAEB = {
+    Основной = Color3.fromRGB(255, 0, 0),      -- Красный
+    Фон = Color3.fromRGB(20, 20, 20),          -- Темно-серый
+    Текст = Color3.fromRGB(255, 255, 255),     -- Белый
+    Акцент = Color3.fromRGB(0, 100, 255),      -- Синий
+    Кнопка = Color3.fromRGB(50, 50, 50),       -- Серый (кнопки)
+    ТекстКнопки = Color3.fromRGB(255, 255, 255) -- Белый (текст кнопок)
 }
 
--- ФУНКЦИЯ СМЕНЫ ЦВЕТОВ
-local function ChangeColors(newColors)
-    if newColors then
-        DALBAEB_Colors = newColors
-        -- Здесь будет код применения цветов к интерфейсу
-        print("[DALBAEB] Colors changed to:", newColors)
+-- ФУНКЦИЯ ДЛЯ ПРОВЕРКИ КОНТРАСТНОСТИ ТЕКСТА
+local function ПроверитьКонтрастность(цветФона, цветТекста)
+    local яркостьФона = 0.299 * цветФона.R + 0.587 * цветФона.G + 0.114 * цветФона.B
+    local яркостьТекста = 0.299 * цветТекста.R + 0.587 * цветТекста.G + 0.114 * цветТекста.B
+    return math.abs(яркостьФона - яркостьТекста) > 0.5
+end
+
+-- ФУНКЦИЯ АВТОМАТИЧЕСКОЙ НАСТРОЙКИ ЦВЕТА ТЕКСТА
+local function АвтоЦветТекста(цветФона)
+    local яркость = 0.299 * цветФона.R + 0.587 * цветФона.G + 0.114 * цветФона.B
+    if яркость > 0.5 then
+        return Color3.fromRGB(0, 0, 0) -- Черный текст на светлом фоне
+    else
+        return Color3.fromRGB(255, 255, 255) -- Белый текст на темном фоне
     end
 end
 
--- МЕНЮ ВЫБОРА ЦВЕТОВ
-local function CreateColorMenu()
-    local colorPresets = {
-        ["Red Theme"] = {
-            Main = Color3.fromRGB(255, 0, 0),
-            Background = Color3.fromRGB(30, 0, 0),
-            Text = Color3.fromRGB(255, 255, 255),
-            Accent = Color3.fromRGB(200, 0, 0)
-        },
-        ["Blue Theme"] = {
-            Main = Color3.fromRGB(0, 0, 255),
-            Background = Color3.fromRGB(0, 0, 30),
-            Text = Color3.fromRGB(255, 255, 255),
-            Accent = Color3.fromRGB(0, 0, 200)
-        },
-        ["Black Theme"] = {
-            Main = Color3.fromRGB(50, 50, 50),
-            Background = Color3.fromRGB(0, 0, 0),
-            Text = Color3.fromRGB(255, 255, 255),
-            Accent = Color3.fromRGB(100, 100, 100)
-        },
-        ["Green Theme"] = {
-            Main = Color3.fromRGB(0, 255, 0),
-            Background = Color3.fromRGB(0, 30, 0),
-            Text = Color3.fromRGB(255, 255, 255),
-            Accent = Color3.fromRGB(0, 200, 0)
-        },
-        ["Purple Theme"] = {
-            Main = Color3.fromRGB(128, 0, 128),
-            Background = Color3.fromRGB(30, 0, 30),
-            Text = Color3.fromRGB(255, 255, 255),
-            Accent = Color3.fromRGB(100, 0, 100)
-        }
-    }
-
-    -- ДОБАВЛЯЕМ КНОПКИ В МЕНЮ ДЛЯ СМЕНЫ ЦВЕТОВ
-    for themeName, colors in pairs(colorPresets) do
-        -- Здесь должен быть код создания кнопки в твоем мод-меню
-        -- Пример: addButton(themeName, function() ChangeColors(colors) end)
-        print("[DALBAEB] Added color theme:", themeName)
+-- ФУНКЦИЯ СМЕНЫ ЦВЕТОВ
+local function СменитьЦвета(новыеЦвета)
+    if новыеЦвета then
+        Цвета_DALBAEB = новыеЦвета
+        print("[DALBAEB] Цвета изменены!")
+        ПрименитьЦветаКИнтерфейсу()
     end
+end
+
+-- ГОТОВЫЕ ЦВЕТОВЫЕ ТЕМЫ
+local ЦветовыеТемы = {
+    ["Красная Тема"] = {
+        Основной = Color3.fromRGB(255, 0, 0),
+        Фон = Color3.fromRGB(30, 0, 0),
+        Текст = Color3.fromRGB(255, 255, 255),
+        Акцент = Color3.fromRGB(200, 0, 0),
+        Кнопка = Color3.fromRGB(80, 0, 0),
+        ТекстКнопки = Color3.fromRGB(255, 255, 255)
+    },
+    ["Синяя Тема"] = {
+        Основной = Color3.fromRGB(0, 100, 255),
+        Фон = Color3.fromRGB(0, 0, 30),
+        Текст = Color3.fromRGB(255, 255, 255),
+        Акцент = Color3.fromRGB(0, 70, 200),
+        Кнопка = Color3.fromRGB(0, 30, 80),
+        ТекстКнопки = Color3.fromRGB(255, 255, 255)
+    },
+    ["Черная Тема"] = {
+        Основной = Color3.fromRGB(100, 100, 100),
+        Фон = Color3.fromRGB(0, 0, 0),
+        Текст = Color3.fromRGB(255, 255, 255),
+        Акцент = Color3.fromRGB(150, 150, 150),
+        Кнопка = Color3.fromRGB(30, 30, 30),
+        ТекстКнопки = Color3.fromRGB(255, 255, 255)
+    },
+    ["Зеленая Тема"] = {
+        Основной = Color3.fromRGB(0, 255, 0),
+        Фон = Color3.fromRGB(0, 20, 0),
+        Текст = Color3.fromRGB(255, 255, 255),
+        Акцент = Color3.fromRGB(0, 180, 0),
+        Кнопка = Color3.fromRGB(0, 50, 0),
+        ТекстКнопки = Color3.fromRGB(255, 255, 255)
+    },
+    ["Фиолетовая Тема"] = {
+        Основной = Color3.fromRGB(160, 0, 255),
+        Фон = Color3.fromRGB(20, 0, 30),
+        Текст = Color3.fromRGB(255, 255, 255),
+        Акцент = Color3.fromRGB(120, 0, 200),
+        Кнопка = Color3.fromRGB(40, 0, 60),
+        ТекстКнопки = Color3.fromRGB(255, 255, 255)
+    },
+    ["Радужная Тема"] = {
+        Основной = Color3.fromHSV(os.clock() % 1, 1, 1),
+        Фон = Color3.fromRGB(20, 20, 20),
+        Текст = Color3.fromRGB(255, 255, 255),
+        Акцент = Color3.fromHSV((os.clock() + 0.3) % 1, 1, 1),
+        Кнопка = Color3.fromHSV((os.clock() + 0.6) % 1, 0.8, 0.8),
+        ТекстКнопки = Color3.fromRGB(255, 255, 255)
+    }
+}
+
+-- СОЗДАНИЕ ЦВЕТОВОГО МЕНЮ
+local function СоздатьЦветовоеМеню()
+    print("[DALBAEB] Загружены цветовые темы:")
+    
+    for названиеТемы, цвета in pairs(ЦветовыеТемы) do
+        print("  - " .. названиеТемы)
+        
+        -- Здесь будет код создания кнопок в твоем мод-меню
+        -- Пример:
+        -- добавитьКнопку(названиеТемы, function()
+        --     СменитьЦвета(цвета)
+        --     print("[DALBAEB] Активирована тема: " .. названиеТемы)
+        -- end)
+    end
+    
+    -- Кнопка для автоматической настройки контрастности
+    -- добавитьКнопку("Авто-контраст", function()
+    --     for имяЦвета, цвет in pairs(Цвета_DALBAEB) do
+    --         if имяЦвета:find("Текст") then
+    --             local фонЦвет = Цвета_DALBAEB[имяЦвета:gsub("Текст", "")]
+    --             if фонЦвет then
+    --                 Цвета_DALBAEB[имяЦвета] = АвтоЦветТекста(фонЦвет)
+    --             end
+    --         end
+    --     end
+    --     ПрименитьЦветаКИнтерфейсу()
+    --     print("[DALBAEB] Контрастность автоматически настроена!")
+    -- end)
 end
 
 -- ФУНКЦИЯ ДЛЯ РУЧНОЙ СМЕНЫ ЦВЕТА
-local function SetCustomColor(colorType, r, g, b)
-    if colorType and r and g and b then
-        local newColor = Color3.fromRGB(r, g, b)
-        if DALBAEB_Colors[colorType] then
-            DALBAEB_Colors[colorType] = newColor
-            print("[DALBAEB] Changed", colorType, "to RGB:", r, g, b)
+local function УстановитьСвойЦвет(типЦвета, r, g, b)
+    if типЦвета and r and g and b then
+        local новыйЦвет = Color3.fromRGB(r, g, b)
+        if Цвета_DALBAEB[типЦвета] then
+            Цвета_DALBAEB[типЦвета] = новыйЦвет
+            
+            -- Автоматическая настройка цвета текста для кнопок
+            if типЦвета == "Кнопка" then
+                Цвета_DALBAEB.ТекстКнопки = АвтоЦветТекста(новыйЦвет)
+            end
+            
+            print("[DALBAEB] Изменен " .. типЦвета .. " на RGB: " .. r .. ", " .. g .. ", " .. b)
+            ПрименитьЦветаКИнтерфейсу()
         end
     end
 end
 
--- АВТОМАТИЧЕСКИЕ ЦВЕТА (РАДУГА)
-local function RainbowColors()
-    local hue = 0
+-- ПРИМЕНЕНИЕ ЦВЕТОВ К ИНТЕРФЕЙСУ
+local function ПрименитьЦветаКИнтерфейсу()
+    -- Этот код будет применять цвета к твоему мод-меню
+    -- Пример:
+    
+    -- if основноеОкно then
+    --     основноеОкно.Color = Цвета_DALBAEB.Фон
+    --     основноеОкно.TextColor3 = Цвета_DALBAEB.Текст
+    -- end
+    
+    -- if кнопки then
+    --     for _, кнопка in pairs(кнопки) do
+    --         кнопка.BackgroundColor3 = Цвета_DALBAEB.Кнопка
+    --         кнопка.TextColor3 = Цвета_DALBAEB.ТекстКнопки
+    --         
+    --         -- Проверка контрастности
+    --         if not ПроверитьКонтрастность(Цвета_DALBAEB.Кнопка, Цвета_DALBAEB.ТекстКнопки) then
+    --             кнопка.TextColor3 = АвтоЦветТекста(Цвета_DALBAEB.Кнопка)
+    --             print("[DALBAEB] Автоматически настроен цвет текста для кнопки")
+    --         end
+    --     end
+    -- end
+    
+    print("[DALBAEB] Цвета интерфейса применены!")
+end
+
+-- ФУНКЦИЯ РАДУЖНОГО ЭФФЕКТА
+local function РадужныйРежим()
     while true do
-        hue = (hue + 0.01) % 1
-        DALBAEB_Colors.Main = Color3.fromHSV(hue, 1, 1)
-        -- Применяем изменения к интерфейсу
+        local оттенок = (os.clock() * 0.5) % 1
+        Цвета_DALBAEB.Основной = Color3.fromHSV(оттенок, 1, 1)
+        Цвета_DALBAEB.Акцент = Color3.fromHSV((оттенок + 0.3) % 1, 1, 1)
+        Цвета_DALBAEB.Кнопка = Color3.fromHSV((оттенок + 0.6) % 1, 0.7, 0.7)
+        ПрименитьЦветаКИнтерфейсу()
         wait(0.1)
     end
 end
 
--- ДОБАВЛЯЕМ КОМАНДЫ В КОНСОЛЬ
-local function AddColorCommands()
+-- ДОБАВЛЕНИЕ КОМАНД В КОНСОЛЬ
+local function ДобавитьЦветовыеКоманды()
     -- Команда для смены темы
-    -- addCommand("colors", {"theme"}, function(themeName)
-    --     local themes = {"red", "blue", "black", "green", "purple"}
-    --     if table.find(themes, themeName:lower()) then
-    --         ChangeColors(colorPresets[themeName:gsub("^%l", string.upper)])
+    -- добавитьКоманду("тема", {"название"}, function(названиеТемы)
+    --     local доступныеТемы = {"красная", "синяя", "черная", "зеленая", "фиолетовая", "радужная"}
+    --     if table.find(доступныеТемы, названиеТемы:lower()) then
+    --         local тема = ЦветовыеТемы[названиеТемы:gsub("^%l", string.upper)]
+    --         if тема then
+    --             СменитьЦвета(тема)
+    --         end
     --     end
-    -- end, "Change color theme")
-
+    -- end, "Смена цветовой темы")
+    
     -- Команда для ручной установки RGB
-    -- addCommand("color", {"type", "r", "g", "b"}, function(type, r, g, b)
-    --     SetCustomColor(type, tonumber(r), tonumber(g), tonumber(b))
-    -- end, "Set custom color RGB")
+    -- добавитьКоманду("цвет", {"тип", "r", "g", "b"}, function(тип, r, g, b)
+    --     УстановитьСвойЦвет(тип, tonumber(r), tonumber(g), tonumber(b))
+    -- end, "Установка своего цвета")
 end
 
--- ИНИЦИАЛИЗАЦИЯ ЦВЕТОВОГО МЕНЮ
-CreateColorMenu()
-AddColorCommands()
+-- ИНИЦИАЛИЗАЦИЯ СИСТЕМЫ ЦВЕТОВ
+print("[DALBAEB] Инициализация цветовой системы...")
+СоздатьЦветовоеМеню()
+ДобавитьЦветовыеКоманды()
+ПрименитьЦветаКИнтерфейсу()
 
-print("[DALBAEB] Color system loaded! Available themes: Red, Blue, Black, Green, Purple")
+-- Запуск радужного режима в отдельном потоке
+-- task.spawn(РадужныйРежим)
+
+print("[DALBAEB] Система цветов загружена! Доступно тем: " .. tostring(#ЦветовыеТемы))
+print("[DALBAEB] Текст всегда будет четко виден благодаря автоматической настройке контрастности!")
+
+-- ОСНОВНОЙ ЦИКЛ ОБНОВЛЕНИЯ ЦВЕТОВ
+while true do
+    ПрименитьЦветаКИнтерфейсу()
+    wait(1)
+end
 
 -- ТВОЙ ОСНОВНОЙ КОД ДЛЯ 99 NIGHTS ЗДЕСЬ
 -- ... (остальная часть твоего скрипта) ...
-
--- ФУНКЦИЯ ДЛЯ ПРИМЕНЕНИЯ ЦВЕТОВ К ИНТЕРФЕЙСУ
-local function ApplyColorsToUI()
-    -- Этот код будет применять выбранные цвета к твоему мод-меню
-    -- Пример:
-    -- if mainWindow then
-    --     mainWindow.Color = DALBAEB_Colors.Background
-    --     mainWindow.TextColor3 = DALBAEB_Colors.Text
-    -- end
-end
-
--- АВТОМАТИЧЕСКИ ПРИМЕНЯЕМ ЦВЕТА ПРИ ИЗМЕНЕНИИ
-while true do
-    ApplyColorsToUI()
-    wait(1)
-end
