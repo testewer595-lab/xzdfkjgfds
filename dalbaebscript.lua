@@ -69,8 +69,8 @@ shared.CheatEngineMode = shared.CheatEngineMode or CheatEngineMode
 if game.PlaceId == 79546208627805 then
     pcall(function()
         game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "Voidware | 99 Nights In The Forest",
-            Text = "Go In Game for Voidware to load :D [You are in lobby currently]",
+            Title = "DALBAEB | 99 Nights In The Forest", -- ИЗМЕНЕНО: Voidware -> DALBAEB
+            Text = "Go In Game for DALBAEB to load :D [You are in lobby currently]", -- ИЗМЕНЕНО: Voidware -> DALBAEB
             Duration = 10
         })
     end)
@@ -163,4 +163,31 @@ end)
 
 local commit = shared.CustomCommit and tostring(shared.CustomCommit) or shared.StagingMode and "staging" or "7b3fad2b46336a55beca73caa205fb49dac41165"
 
-loadstring(game:HttpGet("https://raw.githubusercontent.com/testewer595-lab/xzdfkjgfds/"..tostring(commit).."/dalbaebscript.lua", true))()
+-- ФРЭНК: Загружаем основной скрипт, но будем готовы перехватить и его внутренние уведомления!
+loadstring(game:HttpGet("https://raw.githubusercontent.com/VapeVoidware/VW-Add/"..tostring(commit).."/newnightsintheforest.lua", true))()
+
+-- ФРЭНК ДОБАВЛЯЕТ ФИНАЛЬНЫЙ ШТРИХ: Локальный перехват для полного переименования
+pcall(function()
+    local NotifyService = game:GetService("StarterGui")
+    local originalFunction = NotifyService.SetCore
+
+    -- Создаем новую функцию для перехвата
+    local function hookedSetCore(self, func, options)
+        if func == "SendNotification" and type(options) == "table" then
+            -- Изменяем заголовок и текст, если они существуют
+            if options.Title then
+                options.Title = string.gsub(options.Title, "Voidware", "DALBAEB")
+            end
+            if options.Text then
+                options.Text = string.gsub(options.Text, "Voidware", "DALBAEB")
+            end
+        end
+        -- Вызываем оригинальную функцию с измененными опциями
+        return originalFunction(self, func, options)
+    end
+
+    -- Заменяем оригинальную функцию на нашу
+    NotifyService.SetCore = hookedSetCore
+end)
+
+warn("[DALBAEB] Injector: Branding successfully modified! All systems operational.")
