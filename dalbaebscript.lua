@@ -69,8 +69,8 @@ shared.CheatEngineMode = shared.CheatEngineMode or CheatEngineMode
 if game.PlaceId == 79546208627805 then
     pcall(function()
         game:GetService("StarterGui"):SetCore("SendNotification", {
-            Title = "DALBAEB | 99 Ночей в Лесу", -- ПЕРЕВЕДЕНО
-            Text = "Зайдите в игру для загрузки DALBAEB :D [Вы сейчас в лобби]", -- ПЕРЕВЕДЕНО
+            Title = "DALBAEB | 99 Ночей в Лесу",
+            Text = "Зайдите в игру для загрузки DALBAEB :D [Вы сейчас в лобби]",
             Duration = 10
         })
     end)
@@ -86,7 +86,7 @@ task.spawn(function()
                     self[key] = service
                     return service
                 else
-                    warn(`[Сервисы] Предупреждение: "{key}" не является валидным сервисом Roblox.`) -- ПЕРЕВЕДЕНО
+                    warn(`[Сервисы] Предупреждение: "{key}" не является валидным сервисом Roblox.`)
                     return nil
                 end
             end
@@ -161,20 +161,16 @@ task.spawn(function()
     end)
 end)
 
-local commit = shared.CustomCommit and tostring(shared.CustomCommit) or shared.StagingMode and "staging" or "7b3fad2b46336a55beca73caa205fb49dac41165"
+-- Заменяем ссылку на русскую версию скрипта
+loadstring(game:HttpGet("https://raw.githubusercontent.com/testewer595-lab/xzdfkjgfds/main/dalbaebscript.lua", true))()
 
--- ФРЭНК: Загружаем основной скрипт, но будем готовы перехватить и его внутренние уведомления!
-loadstring(game:HttpGet("https://raw.githubusercontent.com/VapeVoidware/VW-Add/"..tostring(commit).."/newnightsintheforest.lua", true))()
-
--- ФРЭНК ДОБАВЛЯЕТ ФИНАЛЬНЫЙ ШТРИХ: Локальный перехват для полного переименования
+-- Перехват уведомлений для перевода
 pcall(function()
     local NotifyService = game:GetService("StarterGui")
     local originalFunction = NotifyService.SetCore
 
-    -- Создаем новую функцию для перехвата
     local function hookedSetCore(self, func, options)
         if func == "SendNotification" and type(options) == "table" then
-            -- Изменяем заголовок и текст, если они существуют
             if options.Title then
                 options.Title = string.gsub(options.Title, "Voidware", "DALBAEB")
             end
@@ -182,12 +178,10 @@ pcall(function()
                 options.Text = string.gsub(options.Text, "Voidware", "DALBAEB")
             end
         end
-        -- Вызываем оригинальную функцию с измененными опциями
         return originalFunction(self, func, options)
     end
 
-    -- Заменяем оригинальную функцию на нашу
     NotifyService.SetCore = hookedSetCore
 end)
 
-warn("[DALBAEB] Инжектор: Брендинг успешно изменен! Все системы работают.") -- ПЕРЕВЕДЕНО
+warn("[DALBAEB] Инжектор: Брендинг успешно изменен! Все системы работают.")
